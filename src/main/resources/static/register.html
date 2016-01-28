@@ -1,0 +1,31 @@
+<div class="container">
+    <h2><span class="label label-default">TODO:List Registration</span></h2>
+    <h4><span class="label label-warning" ng-hide="usernameRegister && passwordRegister && repeatPasswordRegister">All fields are required</span>
+    </h4>
+    <h4><span class="label label-danger"
+              ng-show="usernameRegister && passwordRegister && repeatPasswordRegister && (passwordRegister != repeatPasswordRegister)">Passwords do not match</span>
+    </h4>
+    <h4><span class="label label-success"
+              ng-show="usernameRegister && passwordRegister && repeatPasswordRegister && (passwordRegister == repeatPasswordRegister)">Okay</span>
+    </h4>
+
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Username" ng-model="usernameRegister">
+    </div>
+
+    <div class="form-group">
+        <input type="password" class="form-control" placeholder="Password" ng-model="passwordRegister">
+    </div>
+
+    <div class="form-group">
+        <input type="password" class="form-control" placeholder="Repeat password" ng-model="repeatPasswordRegister">
+    </div>
+
+    <button type="button" class="btn btn-success" ng-click="addUser(usernameRegister, passwordRegister)"
+            ng-disabled="!usernameRegister || !passwordRegister || !repeatPasswordRegister || !(passwordRegister == repeatPasswordRegister)">
+        Register
+    </button>
+    <button type="button" class="btn btn-default" ng-click="loginPage()">Login page</button>
+    <h4><span class="label label-info">{{userAddInfo}}</span>
+    </h4>
+</div>

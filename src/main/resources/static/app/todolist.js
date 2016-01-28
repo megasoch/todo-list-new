@@ -1,4 +1,4 @@
-var loginApp = angular.module('todoApp', ['ngResource']);
+var loginApp = angular.module('todoApp', ['ngResource', 'ngRoute']);
 
 loginApp.factory('TaskFactory', function ($resource) {
     return $resource('/tasks/:id', {id: '@id'},
@@ -22,7 +22,12 @@ loginApp.factory('DoneFactory', function ($resource) {
         });
 });
 
-loginApp.controller('MenuCtrl', function ($scope, $resource, TaskFactory, DoneFactory) {
+
+loginApp.factory('LoginFactory', function ($resource) {
+    return $resource('/create');
+});
+
+loginApp.controller('MenuCtrl', function ($scope, $resource, $location, TaskFactory, DoneFactory, LoginFactory) {
 
     $scope.currentUser = 'user';
     $scope.noAccess = '';
@@ -33,13 +38,8 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, TaskFactory, DoneFa
     $scope.tasks = [];
     $scope.doneTasks = [];
     $scope.updated = [];
+    $scope.userAddInfo = '';
 
-
-    $scope.menu = function (log, reg, list) {
-        $scope.booleanLogin = log;
-        $scope.booleanRegister = reg;
-        $scope.booleanList = list;
-    };
 
     $scope.editTask = function (index) {
         $scope.updated[index] = true;
@@ -50,19 +50,28 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, TaskFactory, DoneFa
     }
 
     $scope.addUser = function (username, password) {
-    };
+        LoginFactory.save({username: username, password: password}, function() {
+            $location.path('/');
+        }, function () {
+            $scope.userAddInfo = 'User with that username already exists!';
+        });
+    }
 
-    $scope.login = function () {
+    $scope.login = function (username, password) {
+        $location.path('/list');
         $scope.tasks = TaskFactory.query(function () {
             $scope.updated.length = $scope.tasks.length;
         });
         $scope.doneTasks = DoneFactory.query();
-        $scope.menu(false, false, true);
 
     }
 
+    $scope.logout = function () {
+        $resource("/logout").query();
+    }
+
     $scope.addTask = function (text) {
-        TaskFactory.save({userId: 1, title: text}, function () {
+        TaskFactory.save({title: text}, function () {
             $scope.tasks = TaskFactory.query();
             $scope.updated.push(false);
         });
@@ -76,19 +85,21 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, TaskFactory, DoneFa
         });
     }
 
-    $scope.doneTask = function (task) {
+    $scope.doneTask = function (task, index) {
         TaskFactory.remove({id: task.id}, function () {
             $scope.tasks = TaskFactory.query();
-            $scope.updated.push(false);
+            $scope.updated.splice(index, 1)
             DoneFactory.save({userId: task.userId, title: task.title}, function () {
                 $scope.doneTasks = DoneFactory.query();
             });
         });
     }
 
-    $scope.updateTask = function (task, text) {
-        TaskFactory.update({id: task.id, userId: task.userId, title: text}, function () {
+    $scope.updateTask = function (task, text, index) {
+        task.title = text;
+        TaskFactory.update(task, function () {
             $scope.tasks = TaskFactory.query();
+            $scope.updated[index] = false;
         });
     }
 
@@ -101,9 +112,51 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, TaskFactory, DoneFa
     $scope.revertDone = function (done) {
         DoneFactory.remove({id: done.id}, function () {
             $scope.doneTasks = DoneFactory.query();
+            $scope.updated.push(false);
             TaskFactory.save({userId: done.userId, title: done.title}, function () {
                 $scope.tasks = TaskFactory.query();
             });
         });
     }
+
+    $scope.registerPage = function () {
+        $location.path('/register');
+        $scope.userAddInfo = '';
+    }
+
+    $scope.loginPage = function () {
+        $location.path('/');
+    }
+
 });
+
+loginApp.config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
+
+    $routeProvider
+
+        .when('/', {
+            templateUrl: '/login.html',
+            controller: 'MenuCtrl'
+        })
+
+        .when('/register', {
+            templateUrl: '/register.html',
+            controller: 'MenuCtrl'
+        })
+
+        .when('/list', {
+            templateUrl: '/list.html',
+            controller: 'MenuCtrl'
+        })
+
+        .otherwise({
+            redirectTo: '/'
+        });
+
+    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+
+    //$locationProvider.html5Mode(
+    //    {enabled: true,
+    //requireBase: false});
+
+}]);

@@ -6,129 +6,15 @@
 
 		<script src="./bower_components/angular/angular.min.js"></script>
 		<script src="./bower_components/angular-resource/angular-resource.min.js"></script>
+		<script src="./bower_components/angular-route/angular-route.js"></script>
 		<script src="./app/todolist.js"></script>
 	    <link href="./bower_components/bootstrap-css-only/css/bootstrap.min.css" rel="stylesheet" />
 	    <link href="./bower_components/bootstrap-css-only/css/bootstrap-theme.min.css" rel="stylesheet" />
 
 	</head>
 	<body ng-controller="MenuCtrl">
-	    <div ng-show="booleanLogin">
-	        <div class="container">
-	            <h2>
-					<span class="label label-default">TODO:List Login</span>
-	                <span class="label label-danger">{{noAccess}}</span>
-	            </h2>
 
-	            <div class="form-group">
-	                <input type="text" class="form-control" placeholder="Username" ng-model="usernameInput">
-	            </div>
+	<div ng-view></div>
 
-	            <div class="form-group">
-	                <input type="password" class="form-control" placeholder="Password" ng-model="passwordInput">
-	            </div>
-
-	            <button type="button" class="btn btn-success" ng-click="login()" ng-disabled="!usernameInput ||  !passwordInput">Log In</button>
-	            <button type="button" class="btn btn-info" ng-click="menu(false, true, false)">Register</button>
-	        </div>
-	    </div>
-
-	    <div ng-show="booleanRegister">
-	        <div class="container">
-	            <h2><span class="label label-default">TODO:List Registration</span></h2>
-				{{currentUser}}
-	            <h4><span class="label label-warning" ng-hide="usernameRegister && passwordRegister && repeatPasswordRegister">All fields are required</span></h4>
-	            <h4><span class="label label-danger" ng-show="usernameRegister && passwordRegister && repeatPasswordRegister && (passwordRegister != repeatPasswordRegister)">Passwords do not match</span></h4>
-	            <h4><span class="label label-success" ng-show="usernameRegister && passwordRegister && repeatPasswordRegister && (passwordRegister == repeatPasswordRegister)">Okay</span></h4>
-
-	            <div class="form-group">
-	                <input type="text" class="form-control" placeholder="Username" ng-model="usernameRegister">
-	            </div>
-
-	            <div class="form-group">
-	                <input type="password" class="form-control" placeholder="Password" ng-model="passwordRegister">
-	            </div>
-
-	            <div class="form-group">
-	                <input type="password" class="form-control"  placeholder="Repeat password" ng-model="repeatPasswordRegister">
-	            </div>
-
-				<button type="button" class="btn btn-success" ng-click="addUser(usernameRegister, passwordRegister)" ng-disabled="!usernameRegister || !passwordRegister || !repeatPasswordRegister || !(passwordRegister == repeatPasswordRegister)">Register</button>
-				<button type="button" class="btn btn-default" ng-click="menu(true, false, false)">Login page</button>
-	        </div>
-	    </div>
-
-	    <div ng-show="booleanList">
-	        <div class="container">
-	            <h2>
-	                <span class="label label-default">TODO:List Tasks</span>
-	            </h2>
-
-	            <h2>
-	                <span class="label label-primary">{{currentUser}}</span>
-	                <button class="btn btn-default" ng-click="menu(true, false, false)">Log out</button>
-	            </h2>
-
-	            <div class="panel">
-	                <div class="input-group">
-	                    <input class="form-control" ng-model="courseName">
-	                    <span class="input-group-btn">
-	                        <button class="btn btn-primary" ng-click="addTask(courseName)">Add new task</button>
-	                    </span>
-	                </div>
-
-	                <table class="table table-hover">
-	                    <thead>
-	                        <p><h2>
-	                            <span class="label label-info">In progress</span>
-	                            <span class="label label-default">{{tasks.length}}</span>
-	                        </h2></p>
-	                    </thead>
-	                    <tbody>
-	                        <tr ng-repeat="task in tasks track by $index">
-	                            <div>
-	                                <td>
-                                        <div ng-hide="updated[$index]">
-                                            {{task.title}}
-                                        </div>
-                                        <div ng-show="updated[$index]">
-                                            <input type="text" class="form-control" ng-model="editedTask">
-                                        </div>
-                                    </td>
-	                                <td class="text-right">
-	                                    <div class="btn-group" role="group" aria-label="...">
-	                                        <button type="button" class="btn btn-success" ng-click="doneTask(task)" ng-hide="updated[$index]">Done</button>
-	                                        <button type="button" class="btn btn-warning" ng-click="editTask($index)" ng-hide="updated[$index]">Edit</button>
-	                                        <button type="button" class="btn btn-danger" ng-click="removeTask(task, $index)" ng-hide="updated[$index]">Delete</button>
-	                                        <button type="button" class="btn btn-success" ng-click="updateTask(task, editedTask)" ng-show="updated[$index]">Save</button>
-	                                        <button type="button" class="btn btn-warning" ng-click="cancelEdit($index)" ng-show="updated[$index]">Cancel</button>
-	                                    </div>
-	                                </td>
-	                            </div>
-	                        </tr>
-	                    </tbody>
-	                </table>
-
-	                <table class="table table-hover">
-	                    <thead>
-	                    <p><h2>
-	                        <span class="label label-success">Done</span>
-	                        <span class="label label-default">{{doneTasks.length}}</span>
-	                    </h2></p>
-	                    </thead>
-	                    <tbody>
-	                        <tr ng-repeat="done in doneTasks track by $index">
-	                            <td>{{done.title}}</td>
-	                            <td class="text-right">
-	                                <div class="btn-group" role="group" aria-label="...">
-	                                    <button type="button" class="btn btn-primary" ng-click="revertDone(done)">Revert</button>
-	                                    <button type="button" class="btn btn-danger" ng-click="removeDone(done)">Delete</button>
-	                                </div>
-	                            </td>
-	                        </tr>
-	                    </tbody>
-	                </table>
-	            </div>
-	        </div>
-	    </div>
 	</body>
 </html>
