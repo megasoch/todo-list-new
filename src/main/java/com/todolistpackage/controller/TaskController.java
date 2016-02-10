@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * Created by megasoch on 25.12.2015.
- */
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {

@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by megasoch on 25.12.2015.
- */
 @Entity
 @Table(name = "tasks")
 public class Task implements Serializable {

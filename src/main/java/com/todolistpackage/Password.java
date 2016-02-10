@@ -2,9 +2,6 @@ package com.todolistpackage;
 
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by megasoch on 24.12.2015.
- */
 public class Password {
 
     public static String passwordHash(String password, int n) throws NoSuchAlgorithmException {

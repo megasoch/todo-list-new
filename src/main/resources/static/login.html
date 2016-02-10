@@ -5,14 +5,14 @@
     </h2>
 
     <div class="form-group">
-        <input type="text" class="form-control" placeholder="Username" ng-model="usernameInput">
+        <input type="text" class="form-control" placeholder="Username" ng-model="credentials.username">
     </div>
 
     <div class="form-group">
-        <input type="password" class="form-control" placeholder="Password" ng-model="passwordInput">
+        <input type="password" class="form-control" placeholder="Password" ng-model="credentials.password">
     </div>
 
-    <button type="button" class="btn btn-success" ng-click="login()" ng-disabled="!usernameInput ||  !passwordInput">Log
+    <button type="button" class="btn btn-success" ng-click="login()" ng-disabled="!credentials.username ||  !credentials.username">Log
         In
     </button>
     <button type="button" class="btn btn-info" ng-click="registerPage()">Register</button>

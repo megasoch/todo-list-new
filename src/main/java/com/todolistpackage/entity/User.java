@@ -7,10 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by megasoch on 24.12.2015.
- */
-
 @Entity
 @Table(name = "users")
 @EntityScan
@@ -30,6 +26,9 @@ public class User implements Serializable {
     @Column(name = "enabled")
     private Integer enabled;
 
+    @Column(name = "role")
+    private String role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
 
@@ -39,6 +38,8 @@ public class User implements Serializable {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.enabled = 1;
+        this.role = "ROLE_USER";
     }
 
     public Long getId() {
@@ -71,6 +72,14 @@ public class User implements Serializable {
 
     public void setEnabled(Integer enabled) {
         this.enabled = enabled;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public List<Task> getTasks() {

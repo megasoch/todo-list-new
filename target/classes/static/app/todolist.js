@@ -27,7 +27,7 @@ loginApp.factory('LoginFactory', function ($resource) {
     return $resource('/create');
 });
 
-loginApp.controller('MenuCtrl', function ($scope, $resource, $location, TaskFactory, DoneFactory, LoginFactory) {
+loginApp.controller('MenuCtrl', function ($scope, $resource, $location, $rootScope, $http, TaskFactory, DoneFactory, LoginFactory) {
 
     $scope.currentUser = 'user';
     $scope.noAccess = '';
@@ -39,9 +39,23 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, $location, TaskFact
     $scope.doneTasks = [];
     $scope.updated = [];
     $scope.userAddInfo = '';
+    $scope.updatedText = [];
 
+    $scope.$on("$routeChangeSuccess", function () {
+        if ($location.path() == '/list') {
+            $scope.loadTasks();
+        }
+    });
+
+    $scope.loadTasks = function () {
+        $scope.tasks = TaskFactory.query(function () {
+            $scope.updated.length = $scope.tasks.length;
+        });
+        $scope.doneTasks = DoneFactory.query();
+    }
 
     $scope.editTask = function (index) {
+        $scope.updatedText[index] = $scope.tasks[index].title;
         $scope.updated[index] = true;
     }
 
@@ -50,24 +64,19 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, $location, TaskFact
     }
 
     $scope.addUser = function (username, password) {
-        LoginFactory.save({username: username, password: password}, function() {
-            $location.path('/');
+        LoginFactory.save({username: username, password: password}, function () {
+            $location.path('/login');
         }, function () {
             $scope.userAddInfo = 'User with that username already exists!';
         });
     }
 
-    $scope.login = function (username, password) {
+    $scope.login = function () {
         $location.path('/list');
-        $scope.tasks = TaskFactory.query(function () {
-            $scope.updated.length = $scope.tasks.length;
-        });
-        $scope.doneTasks = DoneFactory.query();
-
     }
 
     $scope.logout = function () {
-        $resource("/logout").query();
+        $http.post('logout', {});
     }
 
     $scope.addTask = function (text) {
@@ -125,7 +134,7 @@ loginApp.controller('MenuCtrl', function ($scope, $resource, $location, TaskFact
     }
 
     $scope.loginPage = function () {
-        $location.path('/');
+        $location.path('/login');
     }
 
 });
@@ -153,10 +162,6 @@ loginApp.config(['$routeProvider', '$locationProvider', '$httpProvider', functio
             redirectTo: '/'
         });
 
-    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
-
-    //$locationProvider.html5Mode(
-    //    {enabled: true,
-    //requireBase: false});
+    //$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
 }]);

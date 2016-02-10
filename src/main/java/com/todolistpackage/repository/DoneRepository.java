@@ -7,9 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-/**
- * Created by megasoch on 25.12.2015.
- */
 public interface DoneRepository extends CrudRepository<Done, Long> {
     List<Done> findByUser(User user, Sort sort);
 }

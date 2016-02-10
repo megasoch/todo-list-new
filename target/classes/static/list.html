@@ -33,7 +33,7 @@
                             {{task.title}}
                         </div>
                         <div ng-show="updated[$index]">
-                            <input ng-value="task.title" type="text" class="form-control" ng-model="editedTask">
+                            <input type="text" class="form-control" ng-model="updatedText[$index]">
                         </div>
                     </td>
                     <td class="text-right">
@@ -47,7 +47,7 @@
                             <button type="button" class="btn btn-danger" ng-click="removeTask(task, $index)"
                                     ng-hide="updated[$index]">Delete
                             </button>
-                            <button type="button" class="btn btn-success" ng-click="updateTask(task, editedTask, $index)"
+                            <button type="button" class="btn btn-success" ng-click="updateTask(task, updatedText[$index], $index)"
                                     ng-show="updated[$index]">Save
                             </button>
                             <button type="button" class="btn btn-warning" ng-click="cancelEdit($index)"
